@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klasifikasi Berita — Sport, Finance & Other</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+        }
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+        }
+        .glow-button:hover {
+            box-shadow: 0 6px 30px rgba(37, 99, 235, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between font-sans antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Navbar Header -->
+    <header class="w-full border-b border-gray-800/80 glass-card sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                    <i class="fa-solid fa-newspaper text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
+                        News Classifier AI
+                    </h1>
+                    <p class="text-xs text-blue-400 font-medium">Skip-Gram Word2Vec + Naive Bayes</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold">
+                <span class="px-3 py-1.5 rounded-full bg-slate-800/80 text-gray-300 border border-slate-700/60 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Vercel Ready
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex-grow flex flex-col justify-center">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-6 p-4 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-sm flex items-center gap-3 backdrop-blur-md">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400 text-lg"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if model_error %}
+            <div class="mb-6 p-4 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-sm flex items-center gap-3 backdrop-blur-md">
+                <i class="fa-solid fa-circle-exclamation text-amber-400 text-lg"></i>
+                <span>Peringatan Model: {{ model_error }}</span>
+            </div>
+        {% endif %}
+
+        <!-- Hero Section -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-4">
+                <i class="fa-solid fa-bolt text-blue-400"></i> Klasifikasi Berita Bahasa Indonesia
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+                Analisis Kategori Berita <br class="hidden sm:inline" /> 
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-300 to-blue-500">
+                    Sport, Finance & Other
+                </span>
+            </h2>
+            <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                Tempelkan tautan berita dari situs manapun. Sistem akan mengekstrak isi artikel, melakukan preprocessing Sastrawi, dan memprediksi kategori secara akurat.
+            </p>
+        </div>
+
+        <!-- Target Label Badges -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+            <!-- Sport Badge Card -->
+            <div class="glass-card rounded-2xl p-4 text-center border-t-2 border-t-emerald-500 hover:border-emerald-400 transition-all duration-300 group">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">
+                    🏆
+                </div>
+                <h3 class="font-bold text-emerald-400 text-sm sm:text-base">Sport</h3>
+                <p class="text-[11px] text-gray-400 hidden sm:block mt-1">Olahraga, Pertandingan, Sepakbola, Balap</p>
+            </div>
+
+            <!-- Finance Badge Card -->
+            <div class="glass-card rounded-2xl p-4 text-center border-t-2 border-t-amber-500 hover:border-amber-400 transition-all duration-300 group">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 text-amber-400 mx-auto flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">
+                    💰
+                </div>
+                <h3 class="font-bold text-amber-400 text-sm sm:text-base">Finance</h3>
+                <p class="text-[11px] text-gray-400 hidden sm:block mt-1">Ekonomi, Saham, Perbankan, Pasar Modal</p>
+            </div>
+
+            <!-- Other Badge Card -->
+            <div class="glass-card rounded-2xl p-4 text-center border-t-2 border-t-purple-500 hover:border-purple-400 transition-all duration-300 group">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-500/10 text-purple-400 mx-auto flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition-transform">
+                    🌐
+                </div>
+                <h3 class="font-bold text-purple-400 text-sm sm:text-base">Other</h3>
+                <p class="text-[11px] text-gray-400 hidden sm:block mt-1">Politik, Hiburan, Teknologi & Lainnya</p>
+            </div>
+        </div>
+
+        <!-- Input Form Section -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-16 -top-16 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+            
+            <form action="{{ url_for('classify') }}" method="POST" id="classifyForm" onsubmit="showLoading()">
+                <label for="urlInput" class="block text-sm font-semibold text-gray-200 mb-2">
+                    <i class="fa-solid fa-link text-blue-400 mr-2"></i> URL Berita Web
+                </label>
+
+                <div class="relative flex flex-col sm:flex-row gap-3 mb-4">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <input 
+                            type="url" 
+                            id="urlInput"
+                            name="url" 
+                            required
+                            placeholder="https://finance.detik.com/berita-ekonomi/d-12345..."
+                            class="w-full pl-11 pr-4 py-4 rounded-2xl text-gray-100 placeholder-gray-500 glass-input focus:outline-none transition-all text-sm font-mono"
+                        />
+                    </div>
+                    <button 
+                        type="submit" 
+                        id="submitBtn"
+                        class="glow-button px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all whitespace-nowrap"
+                    >
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Klasifikasikan</span>
+                    </button>
+                </div>
+
+                <!-- Sample Quick Paste Buttons -->
+                <div class="flex flex-wrap items-center gap-2 pt-2 text-xs">
+                    <span class="text-gray-400 font-medium">Contoh URL:</span>
+                    <button type="button" onclick="setSampleUrl('https://sport.detik.com/sepakbola/liga-indonesia/d-7550000/persib-vs-persija')" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+                        ⚽ Sport Demo
+                    </button>
+                    <button type="button" onclick="setSampleUrl('https://finance.detik.com/bursa-dan-valas/d-7550001/ihsg-menguat-rupiah-stabil')" class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all">
+                        💰 Finance Demo
+                    </button>
+                    <button type="button" onclick="setSampleUrl('https://inet.detik.com/cyberlife/d-7550002/teknologi-ai-terbaru')" class="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-all">
+                        🌐 Other Demo
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- System Pipeline Architecture Card -->
+        <div class="mt-12 glass-card rounded-2xl p-6">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 text-center">
+                Alur Pemrosesan Berita
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
+                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-blue-400 text-lg mb-1"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+                    <h4 class="text-xs font-semibold text-gray-200">1. Scraping</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Ekstraksi teks berita dari URL</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-indigo-400 text-lg mb-1"><i class="fa-solid fa-filter"></i></div>
+                    <h4 class="text-xs font-semibold text-gray-200">2. Preprocessing</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Cleaning, Stopwords & Stemming Sastrawi</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-purple-400 text-lg mb-1"><i class="fa-solid fa-brain"></i></div>
+                    <h4 class="text-xs font-semibold text-gray-200">3. Word2Vec</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Vektor dokumen Skip-Gram (Size 100)</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-emerald-400 text-lg mb-1"><i class="fa-solid fa-square-check"></i></div>
+                    <h4 class="text-xs font-semibold text-gray-200">4. Klasifikasi</h4>
+                    <p class="text-[11px] text-gray-400 mt-1">Gaussian Naive Bayes & Domain Labeling</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-gray-800/60 py-6 text-center text-xs text-gray-500">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>News Classifier — Powered by Flask & Vercel | Skip-Gram Word2Vec + Naive Bayes</p>
+        </div>
+    </footer>
+
+    <script>
+        function setSampleUrl(url) {
+            document.getElementById('urlInput').value = url;
+            document.getElementById('urlInput').focus();
+        }
+
+        function showLoading() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-white"></i> <span>Memproses...</span>`;
+        }
+    </script>
+</body>
+</html>
