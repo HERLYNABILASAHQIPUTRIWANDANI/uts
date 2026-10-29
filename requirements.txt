@@ -2,7 +2,6 @@ Flask>=3.0.0
 python-dotenv
 requests
 beautifulsoup4
-Sastrawi==1.0.1
 gensim==4.4.0
 scikit-learn==1.6.1
 numpy==2.1.3
